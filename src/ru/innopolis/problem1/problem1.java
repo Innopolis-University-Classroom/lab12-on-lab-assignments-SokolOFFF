@@ -25,17 +25,31 @@ abstract class Logger
 class ConsoleLogger : Logger{
         protected override void WriteMessage(string msg){
             Console.WriteLine("Writing to console: " + msg);
+            next.WriteMessage(msg);
         }
 }
 
-class EmailLogger : Logger{
+class ServerLogger : Logger{
     protected override void WriteMessage(string msg){
-        Console.WriteLine("Sending via email: " + msg);
+        Console.WriteLine("Sending to server: " + msg);
+        next.WriteMessage(msg);
     }
 }
 
 class FileLogger : Logger{
     protected override void WriteMessage(string msg){
         Console.WriteLine("Writing to Log File: " + msg);
-        }
+        next.WriteMessage(msg);
+    }
+}
+
+public class problem1{
+    public static void main(String[] args) {
+        Logger msgToConsole = new ConsoleLogger();
+        Logger msgToFile = new FileLogger();
+        Logger msgTOServer = new ServerLogger();
+        msgToConsole.SetNext(msgToFile);
+        msgToFile.SetNext(msgTOServer);
+        msgToConsole.WriteMessage("Hello!");
+    }
 }
